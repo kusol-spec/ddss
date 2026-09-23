@@ -123,6 +123,15 @@
                             <input type="text" id="portal-teacher-name" value="อาจารย์ปัญญา ประเสริฐวิทย์" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-700 font-medium">
                         </div>
                     </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสผ่านอาจารย์ <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fa-solid fa-key"></i>
+                            </span>
+                            <input type="password" id="portal-teacher-code" required placeholder="กรอกรหัสผ่านอาจารย์" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-700 font-medium">
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center space-x-2">
@@ -146,6 +155,15 @@
                                 <i class="fa-solid fa-lock"></i>
                             </span>
                             <input type="text" id="portal-admin-name" value="ผู้ดูแลระบบกุศลวิทยา" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-700 font-medium">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสแอดมิน <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fa-solid fa-key"></i>
+                            </span>
+                            <input type="password" id="portal-admin-code" required placeholder="กรอกรหัสแอดมิน" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-slate-700 font-medium">
                         </div>
                     </div>
                 </div>
@@ -837,11 +855,39 @@
 
                         <!-- แท็บที่ 3: จัดการรายชื่ออาจารย์ (Teachers List) -->
                         <div id="admin-teachers-tab" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
-                            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
                                 <div>
                                     <h3 class="font-bold text-slate-800 text-base">สารบัญทำเนียบอาจารย์และผู้พิจารณา</h3>
-                                    <p class="text-xs text-slate-400">ตรวจสอบสิทธิ์การเข้าถึงและความรับผิดชอบของบุคลากรภายในระบบ</p>
+                                    <p class="text-xs text-slate-400">ตรวจสอบสิทธิ์การเข้าถึงและความรับผิดชอบของบุคลากรภายในระบบ • แก้ไขได้เฉพาะแอดมินเท่านั้น</p>
                                 </div>
+                                <!-- ปุ่มเปิดฟอร์มเพิ่มครูใหม่ -->
+                                <button onclick="toggleAddTeacherForm()" class="bg-pink-600 hover:bg-pink-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 shadow-md">
+                                    <i class="fa-solid fa-user-plus"></i>
+                                    <span>เพิ่มครูใหม่</span>
+                                </button>
+                            </div>
+
+                            <!-- ฟอร์มเพิ่มครูใหม่ (พับเก็บได้) -->
+                            <div id="admin-add-teacher-form-container" class="hidden bg-slate-50 p-4 rounded-xl border border-slate-200 animate-fade-in space-y-3">
+                                <p class="text-xs font-bold text-pink-700"><i class="fa-solid fa-chalkboard-user mr-1"></i> กรอกข้อมูลคุณครูคนใหม่</p>
+                                <form id="admin-add-teacher-form" onsubmit="handleAdminAddTeacher(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+                                    <div class="sm:col-span-2">
+                                        <label class="block text-[11px] font-bold text-slate-600 mb-1">ชื่อ - นามสกุลคุณครู <span class="text-red-500">*</span></label>
+                                        <input type="text" id="admin-new-teacher-name" required placeholder="เช่น อาจารย์สมชาย ใจดี" class="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 font-medium focus:ring-1 focus:ring-pink-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-600 mb-1">วิชาที่รับผิดชอบหลัก <span class="text-red-500">*</span></label>
+                                        <input type="text" id="admin-new-teacher-subject" required placeholder="เช่น คณิตศาสตร์" class="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 font-medium focus:ring-1 focus:ring-pink-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-600 mb-1">รหัสครู <span class="text-red-500">*</span></label>
+                                        <input type="text" id="admin-new-teacher-id" required placeholder="เช่น T-006" class="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 font-medium focus:ring-1 focus:ring-pink-500">
+                                    </div>
+                                    <div class="sm:col-span-4 flex justify-end space-x-2 pt-2">
+                                        <button type="button" onclick="toggleAddTeacherForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold px-3 py-1.5 rounded-lg text-xs transition-all">ยกเลิก</button>
+                                        <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs transition-all flex items-center space-x-1"><i class="fa-solid fa-check"></i><span>บันทึกรายชื่อครู</span></button>
+                                    </div>
+                                </form>
                             </div>
 
                             <div class="overflow-x-auto w-full border border-slate-100 rounded-xl">
@@ -852,6 +898,7 @@
                                             <th class="px-6 py-3 text-slate-600">ชื่อ - นามสกุลคุณครู</th>
                                             <th class="px-6 py-3 text-slate-600">วิชาที่รับผิดชอบหลัก</th>
                                             <th class="px-6 py-3 text-center text-slate-600">สิทธิ์พิจารณา</th>
+                                            <th class="px-6 py-3 text-center text-slate-600">การจัดการ (แอดมินเท่านั้น)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="admin-teachers-table-body" class="divide-y divide-slate-100 bg-white">
@@ -898,6 +945,87 @@
                     ปิดหน้าต่าง
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- หน้าต่างแก้ไขข้อมูล/รหัสนักเรียน (แอดมินเท่านั้น) -->
+    <div id="admin-edit-student-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-pink-50">
+                <h3 class="font-bold text-slate-800 flex items-center space-x-2">
+                    <i class="fa-solid fa-user-pen text-pink-500"></i>
+                    <span>แก้ไขข้อมูล/รหัสนักเรียน</span>
+                </h3>
+                <button onclick="closeAdminEditStudentModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="handleAdminEditStudentSave(event)">
+                <div class="p-6 space-y-3">
+                    <input type="hidden" id="edit-student-original-id">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อ - นามสกุล <span class="text-red-500">*</span></label>
+                        <input type="text" id="edit-student-name" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-slate-700 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">ชั้น ม. <span class="text-red-500">*</span></label>
+                        <select id="edit-student-class" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-slate-700 font-medium">
+                            <option value="1">ม.1</option>
+                            <option value="2">ม.2</option>
+                            <option value="3">ม.3</option>
+                            <option value="4">ม.4</option>
+                            <option value="5">ม.5</option>
+                            <option value="6">ม.6</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสนักเรียน <span class="text-red-500">*</span></label>
+                        <input type="text" id="edit-student-id" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-slate-700 font-medium font-mono">
+                        <p class="text-[11px] text-slate-400 mt-1"><i class="fa-solid fa-shield-halved mr-1"></i>เฉพาะแอดมินเท่านั้นที่แก้ไขรหัสนี้ได้</p>
+                    </div>
+                </div>
+                <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end space-x-2">
+                    <button type="button" onclick="closeAdminEditStudentModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-xl text-sm transition-all">ยกเลิก</button>
+                    <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition-all flex items-center space-x-1.5"><i class="fa-solid fa-floppy-disk"></i><span>บันทึก</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- หน้าต่างแก้ไขข้อมูล/รหัสครู (แอดมินเท่านั้น) -->
+    <div id="admin-edit-teacher-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-pink-50">
+                <h3 class="font-bold text-slate-800 flex items-center space-x-2">
+                    <i class="fa-solid fa-user-pen text-pink-500"></i>
+                    <span>แก้ไขข้อมูล/รหัสครู</span>
+                </h3>
+                <button onclick="closeAdminEditTeacherModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="handleAdminEditTeacherSave(event)">
+                <div class="p-6 space-y-3">
+                    <input type="hidden" id="edit-teacher-original-id">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อ - นามสกุลคุณครู <span class="text-red-500">*</span></label>
+                        <input type="text" id="edit-teacher-name" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-slate-700 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">วิชาที่รับผิดชอบหลัก <span class="text-red-500">*</span></label>
+                        <input type="text" id="edit-teacher-subject" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-slate-700 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสครู <span class="text-red-500">*</span></label>
+                        <input type="text" id="edit-teacher-id" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-slate-700 font-medium font-mono">
+                        <p class="text-[11px] text-slate-400 mt-1"><i class="fa-solid fa-shield-halved mr-1"></i>เฉพาะแอดมินเท่านั้นที่แก้ไขรหัสนี้ได้</p>
+                    </div>
+                </div>
+                <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end space-x-2">
+                    <button type="button" onclick="closeAdminEditTeacherModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-xl text-sm transition-all">ยกเลิก</button>
+                    <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition-all flex items-center space-x-1.5"><i class="fa-solid fa-floppy-disk"></i><span>บันทึก</span></button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1306,6 +1434,13 @@
                 showToast("ยินดีต้อนรับคุณ " + currentUser.name + " เข้าสู่ระบบ", "success");
 
             } else if (role === 'teacher') {
+                const TEACHER_ACCESS_CODE = "4555";
+                const teacherCode = document.getElementById('portal-teacher-code').value.trim();
+                if (teacherCode !== TEACHER_ACCESS_CODE) {
+                    showToast("รหัสผ่านอาจารย์ไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง", "error");
+                    return;
+                }
+
                 const teacherName = document.getElementById('portal-teacher-name').value.trim();
                 currentUser = {
                     role: "teacher",
@@ -1318,6 +1453,13 @@
                 showToast("เข้าสู่ระบบในฐานะอาจารย์: " + currentUser.name, "info");
 
             } else if (role === 'admin') {
+                const ADMIN_ACCESS_CODE = "12345";
+                const adminCode = document.getElementById('portal-admin-code').value.trim();
+                if (adminCode !== ADMIN_ACCESS_CODE) {
+                    showToast("รหัสแอดมินไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง", "error");
+                    return;
+                }
+
                 const adminName = document.getElementById('portal-admin-name').value.trim();
                 currentUser = {
                     role: "admin",
@@ -2118,6 +2260,181 @@
             }
         }
 
+        // ซ่อน/แสดง ฟอร์มเพิ่มรายชื่อครูใหม่
+        function toggleAddTeacherForm() {
+            const form = document.getElementById('admin-add-teacher-form-container');
+            form.classList.toggle('hidden');
+        }
+
+        // บันทึกการเพิ่มครูใหม่ (ฝ่ายแอดมินเท่านั้น)
+        function handleAdminAddTeacher(event) {
+            event.preventDefault();
+            const name = document.getElementById('admin-new-teacher-name').value.trim();
+            const subject = document.getElementById('admin-new-teacher-subject').value.trim();
+            const teacherId = document.getElementById('admin-new-teacher-id').value.trim();
+
+            if (!name || !subject || !teacherId) {
+                showToast("กรุณากรอกข้อมูลคุณครูใหม่ให้ครบถ้วน", "error");
+                return;
+            }
+
+            // ตรวจสอบรหัสครูซ้ำกัน
+            if (teachersList.some(t => t.id === teacherId)) {
+                showToast(`รหัสครู ${teacherId} มีในระบบอยู่แล้ว กรุณาใช้รหัสอื่น`, "error");
+                return;
+            }
+
+            const newTeacher = { id: teacherId, name: name, subject: subject };
+            teachersList.push(newTeacher);
+            callServer_("addTeacher", null, newTeacher);
+
+            showToast(`เพิ่มรายชื่อคุณครู ${name} เข้าระบบสำเร็จ`, "success");
+
+            // รีเซ็ตฟอร์ม
+            document.getElementById('admin-new-teacher-name').value = "";
+            document.getElementById('admin-new-teacher-subject').value = "";
+            document.getElementById('admin-new-teacher-id').value = "";
+            toggleAddTeacherForm();
+            renderData();
+        }
+
+        // ลบรายชื่อครูพ้นสภาพระบบ (ฝ่ายแอดมินเท่านั้น)
+        function adminDeleteTeacher(id, name) {
+            const index = teachersList.findIndex(t => t.id === id);
+            if (index !== -1) {
+                teachersList.splice(index, 1);
+                callServer_("deleteTeacher", null, id);
+
+                showToast(`ลบรายชื่อคุณครู ${name} พ้นระบบแล้ว`, "success");
+                renderData();
+            }
+        }
+
+        // ==================== [โหมดแก้ไขรหัสครู / รหัสนักเรียน - สิทธิ์แอดมินเท่านั้น] ====================
+
+        // เปิดหน้าต่างแก้ไขข้อมูล/รหัสนักเรียน
+        function openAdminEditStudentModal(id) {
+            if (currentUser.role !== 'admin') {
+                showToast("เฉพาะแอดมินเท่านั้นที่มีสิทธิ์แก้ไขรหัสนักเรียน", "error");
+                return;
+            }
+            const student = studentsList.find(s => s.id === id);
+            if (!student) return;
+
+            document.getElementById('edit-student-original-id').value = student.id;
+            document.getElementById('edit-student-name').value = student.name;
+            document.getElementById('edit-student-class').value = student.class;
+            document.getElementById('edit-student-id').value = student.id;
+
+            document.getElementById('admin-edit-student-modal').classList.remove('hidden');
+        }
+
+        // ปิดหน้าต่างแก้ไขนักเรียน
+        function closeAdminEditStudentModal() {
+            document.getElementById('admin-edit-student-modal').classList.add('hidden');
+        }
+
+        // บันทึกการแก้ไขข้อมูล/รหัสนักเรียน (แอดมินเท่านั้น)
+        function handleAdminEditStudentSave(event) {
+            event.preventDefault();
+            const originalId = document.getElementById('edit-student-original-id').value;
+            const newName = document.getElementById('edit-student-name').value.trim();
+            const newClass = document.getElementById('edit-student-class').value;
+            const newId = document.getElementById('edit-student-id').value.trim();
+
+            if (!newName || !newId) {
+                showToast("กรุณากรอกข้อมูลนักเรียนให้ครบถ้วน", "error");
+                return;
+            }
+
+            // ถ้าเปลี่ยนรหัสนักเรียน ตรวจสอบว่ารหัสใหม่ไม่ซ้ำกับคนอื่น
+            if (newId !== originalId && studentsList.some(s => s.id === newId)) {
+                showToast(`รหัสนักเรียน ${newId} มีในระบบอยู่แล้ว กรุณาใช้รหัสอื่น`, "error");
+                return;
+            }
+
+            const student = studentsList.find(s => s.id === originalId);
+            if (!student) return;
+
+            student.name = newName;
+            student.class = newClass;
+            student.id = newId;
+
+            // ย้ายสถิติเวลาเรียนไปยังรหัสนักเรียนใหม่ (ถ้ามีการเปลี่ยนรหัส)
+            if (newId !== originalId) {
+                studentAttendanceData[newId] = studentAttendanceData[originalId] || {};
+                delete studentAttendanceData[originalId];
+
+                // อัปเดตคำขอลาที่อ้างอิงรหัสนักเรียนเดิมให้ตรงกับรหัสใหม่
+                leaveRequests.forEach(req => {
+                    if (req.studentId === originalId) {
+                        req.studentId = newId;
+                    }
+                });
+            }
+
+            callServer_("updateStudent", null, originalId, student);
+            showToast(`บันทึกการแก้ไขข้อมูลของ ${newName} เรียบร้อยแล้ว`, "success");
+
+            closeAdminEditStudentModal();
+            renderData();
+        }
+
+        // เปิดหน้าต่างแก้ไขข้อมูล/รหัสครู
+        function openAdminEditTeacherModal(id) {
+            if (currentUser.role !== 'admin') {
+                showToast("เฉพาะแอดมินเท่านั้นที่มีสิทธิ์แก้ไขรหัสครู", "error");
+                return;
+            }
+            const teacher = teachersList.find(t => t.id === id);
+            if (!teacher) return;
+
+            document.getElementById('edit-teacher-original-id').value = teacher.id;
+            document.getElementById('edit-teacher-name').value = teacher.name;
+            document.getElementById('edit-teacher-subject').value = teacher.subject;
+            document.getElementById('edit-teacher-id').value = teacher.id;
+
+            document.getElementById('admin-edit-teacher-modal').classList.remove('hidden');
+        }
+
+        // ปิดหน้าต่างแก้ไขครู
+        function closeAdminEditTeacherModal() {
+            document.getElementById('admin-edit-teacher-modal').classList.add('hidden');
+        }
+
+        // บันทึกการแก้ไขข้อมูล/รหัสครู (แอดมินเท่านั้น)
+        function handleAdminEditTeacherSave(event) {
+            event.preventDefault();
+            const originalId = document.getElementById('edit-teacher-original-id').value;
+            const newName = document.getElementById('edit-teacher-name').value.trim();
+            const newSubject = document.getElementById('edit-teacher-subject').value.trim();
+            const newId = document.getElementById('edit-teacher-id').value.trim();
+
+            if (!newName || !newSubject || !newId) {
+                showToast("กรุณากรอกข้อมูลคุณครูให้ครบถ้วน", "error");
+                return;
+            }
+
+            // ถ้าเปลี่ยนรหัสครู ตรวจสอบว่ารหัสใหม่ไม่ซ้ำกับคนอื่น
+            if (newId !== originalId && teachersList.some(t => t.id === newId)) {
+                showToast(`รหัสครู ${newId} มีในระบบอยู่แล้ว กรุณาใช้รหัสอื่น`, "error");
+                return;
+            }
+
+            const teacher = teachersList.find(t => t.id === originalId);
+            if (!teacher) return;
+
+            teacher.name = newName;
+            teacher.subject = newSubject;
+            teacher.id = newId;
+
+            callServer_("updateTeacher", null, originalId, teacher);
+            showToast(`บันทึกการแก้ไขข้อมูลของ ${newName} เรียบร้อยแล้ว`, "success");
+
+            closeAdminEditTeacherModal();
+            renderData();
+        }
+
         // เรนเดอร์แผงควบคุมระบบแอดมินทั้งหมด
         function renderAdminDashboard() {
             // อัปเดตสถิติจำนวนนักเรียนในแผงผู้ดูแล
@@ -2172,7 +2489,10 @@
                                     ${badgeText}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-center">
+                            <td class="px-4 py-3 text-center space-x-1">
+                                <button onclick="openAdminEditStudentModal('${sId}')" class="text-sky-600 hover:bg-sky-50 p-1.5 rounded-lg transition-all" title="แก้ไขข้อมูล/รหัสนักเรียน (แอดมินเท่านั้น)">
+                                    <i class="fa-solid fa-pen text-xs"></i>
+                                </button>
                                 <button onclick="adminDeleteStudent('${sId}', '${s.name}')" class="text-rose-600 hover:bg-rose-50 p-1.5 rounded-lg transition-all" title="ลบชื่อจากระบบทะเบียน">
                                     <i class="fa-solid fa-user-minus text-xs"></i>
                                 </button>
@@ -2191,6 +2511,14 @@
                         <td class="px-6 py-3 font-semibold text-slate-800">${t.name}</td>
                         <td class="px-6 py-3 font-medium text-slate-600"><span class="bg-sky-50 text-sky-700 px-2 py-0.5 rounded-lg border border-sky-100 text-xs">${t.subject}</span></td>
                         <td class="px-6 py-3 text-center"><span class="text-emerald-600 font-bold"><i class="fa-solid fa-square-check mr-1"></i>พิจารณาและตรวจชื่อได้</span></td>
+                        <td class="px-6 py-3 text-center space-x-1">
+                            <button onclick="openAdminEditTeacherModal('${t.id}')" class="text-sky-600 hover:bg-sky-50 p-1.5 rounded-lg transition-all" title="แก้ไขข้อมูล/รหัสครู (แอดมินเท่านั้น)">
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </button>
+                            <button onclick="adminDeleteTeacher('${t.id}', '${t.name}')" class="text-rose-600 hover:bg-rose-50 p-1.5 rounded-lg transition-all" title="ลบรายชื่อครูจากระบบ">
+                                <i class="fa-solid fa-user-minus text-xs"></i>
+                            </button>
+                        </td>
                     </tr>
                 `).join('');
             }
